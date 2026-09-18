@@ -8,8 +8,8 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Kantumruy Pro', Arial, sans-serif;
-            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 50%, #fbd786 100%);
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b9e 0%, #ff8caf 40%, #ffd085 100%);
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -24,26 +24,21 @@
         }
 
         .header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
+            font-size: 20px;
+            margin-bottom: 15px;
             color: #000;
-        }
-        
-        .verified-badge {
-            color: #1d9bf0;
-            font-size: 18px;
-            vertical-align: middle;
+            font-weight: bold;
         }
 
         .header h2 {
-            font-size: 22px;
-            margin: 10px 0 5px;
+            font-size: 18px;
+            margin: 10px 0 15px;
+            font-weight: normal;
         }
 
         .header p {
-            font-size: 16px;
+            font-size: 14px;
             margin-bottom: 30px;
-            text-transform: uppercase;
         }
 
         .form-group {
@@ -53,58 +48,77 @@
         .form-group label {
             display: block;
             font-size: 14px;
-            margin-bottom: 8px;
-            font-weight: bold;
+            margin-bottom: 10px;
         }
 
         input[type="text"] {
-            width: 80%;
+            width: 85%;
             padding: 12px;
             border-radius: 25px;
             border: none;
-            background-color: #cfd8dc;
+            background-color: #d8e0e5;
             text-align: center;
-            font-size: 16px;
+            font-size: 14px;
+            font-weight: bold;
             outline: none;
+            color: #000;
         }
 
+        /* ស្ទីលប៊ូតុងទូទៅ */
         button {
-            padding: 10px 30px;
-            border-radius: 20px;
+            padding: 12px 30px;
+            border-radius: 25px;
             border: none;
-            background-color: #cfd8dc;
-            font-weight: bold;
+            background-color: #d8e0e5;
             font-size: 14px;
             cursor: pointer;
-            margin-top: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin-top: 10px;
             transition: 0.2s;
+            color: #000;
         }
 
         button:active {
             transform: scale(0.95);
         }
 
-        button:disabled {
-            opacity: 0.7;
+        /* ស្ទីលប៊ូតុងពិសេស */
+        .btn-dark {
+            background-color: #333;
+            color: white;
+            width: 200px;
+        }
+
+        .btn-light {
+            background-color: #d8e0e5;
+            color: #6a95cc;
+            width: 200px;
+        }
+
+        .btn-green {
+            background-color: #5cb85c;
+            color: white;
+            font-weight: bold;
+            display: none; /* លាក់សិន ពេលកូដចេញទើបបង្ហាញ */
+            margin: 10px auto;
+            width: 150px;
+        }
+
+        .btn-disabled {
+            background-color: #e0e0e0 !important;
+            color: #b0b0b0 !important;
             cursor: not-allowed;
         }
 
+        .admin-title {
+            color: #d32f2f;
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        /* លាក់ផ្ទាំងទី២ និង ទី៣ ពេលបើកដំបូង */
         #screen2, #screen3 {
             display: none;
-        }
-
-        .copy-btn {
-            background-color: #4CAF50;
-            color: white;
-            display: none;
-            margin-top: 10px;
-        }
-
-        /* រចនាបថសម្រាប់ប៊ូតុង Admin */
-        .admin-btn {
-            background-color: #333;
-            color: white;
         }
     </style>
 </head>
@@ -112,9 +126,9 @@
 
     <div class="container">
         <div class="header">
-            <h1>SEAVLONG OFFICIALS <span class="verified-badge">✔</span></h1>
+            <h1>SEAVLONG OFFICIALS ✔</h1>
             <h2>សេវាកម្មយកកូដថ្មីៗ</h2>
-            <p>Robux Gift Card</p>
+            <p>ROBUX GIFT CARD</p>
         </div>
 
         <!-- ផ្ទាំងទី១: បញ្ចូល Username -->
@@ -130,33 +144,34 @@
         <div id="screen2">
             <div class="form-group">
                 <label>សូមចុចពាក្យ Send code</label>
-                <button id="sendBtn" style="margin-top: 0; margin-bottom: 20px;">SEND CODE</button>
+                <button id="sendBtn">SEND CODE</button>
             </div>
-            <div class="form-group">
-                <input type="text" id="codeResult" value="CODE" readonly>
-                <br>
-                <button id="copyBtn" class="copy-btn">COPY កូដ</button>
+            
+            <!-- កន្លែងបង្ហាញកូដ -->
+            <div id="codeContainer" style="display: none; margin-top: 30px;">
+                <input type="text" id="codeResult" value="" readonly>
+                <button id="copyBtn" class="btn-green">COPY កូដ</button>
             </div>
         </div>
 
         <!-- ផ្ទាំងទី៣: សម្រាប់ Admin លាក់កូដសម្ងាត់ -->
         <div id="screen3">
-            <h3 style="color: #d32f2f;">🔒 ផ្ទាំងការកំណត់ Admin</h3>
+            <div class="admin-title">🔒 ផ្ទាំងការកំណត់ Admin</div>
             <div class="form-group">
                 <label>បញ្ចូលកូដ Robux ថ្មីនៅទីនេះ៖</label>
-                <input type="text" id="newAdminCode" placeholder="ឧ. ROBUX-1234-5678">
+                <input type="text" id="newAdminCode" placeholder="ROBUX1777&$@">
             </div>
-            <button id="saveAdminCodeBtn" class="admin-btn">រក្សាទុកកូដ (Save)</button>
+            <button id="saveAdminCodeBtn" class="btn-dark">រក្សាទុកកូដ (Save)</button>
             <br>
-            <button id="backToHomeBtn" style="margin-top: 10px;">ត្រលប់ក្រោយ</button>
+            <button id="backToHomeBtn" class="btn-light">ត្រលប់ក្រោយ</button>
         </div>
     </div>
 
     <script>
-        // ទាញយកកូដដែល Admin បាន Save ទុក (បើគ្មានទេ ប្រើកូដ Default នេះ)
+        // ទាញយកកូដដែល Admin បាន Save ទុក
         let savedAdminCode = localStorage.getItem('secretRobuxCode') || "ROBUX-0000-0000-0000";
 
-        // ចាប់យក Element ពី HTML
+        // ចាប់យក Element
         const screen1 = document.getElementById('screen1');
         const screen2 = document.getElementById('screen2');
         const screen3 = document.getElementById('screen3');
@@ -165,13 +180,14 @@
         const sendBtn = document.getElementById('sendBtn');
         const codeResult = document.getElementById('codeResult');
         const copyBtn = document.getElementById('copyBtn');
+        const codeContainer = document.getElementById('codeContainer');
         
         // Admin Elements
         const newAdminCodeInput = document.getElementById('newAdminCode');
         const saveAdminCodeBtn = document.getElementById('saveAdminCodeBtn');
         const backToHomeBtn = document.getElementById('backToHomeBtn');
 
-        // មុខងារពេលចុចប៊ូតុង "បន្ទាប់ទៀត"
+        // មុខងារពេលចុច "បន្ទាប់ទៀត"
         nextBtn.addEventListener('click', () => {
             const userVal = usernameInput.value.trim();
             
@@ -180,56 +196,59 @@
                 return;
             }
 
-            // ត្រួតពិនិត្យមើលថាតើជា Admin ដែរឬទេ
             if (userVal === "Longzz@") {
-                // លាក់ផ្ទាំងទី១ បង្ហាញផ្ទាំង Admin (ទី៣)
+                // ចូលផ្ទាំង Admin
                 screen1.style.display = 'none';
                 screen3.style.display = 'block';
-                newAdminCodeInput.value = savedAdminCode; // បង្ហាញកូដចាស់ដែលធ្លាប់ Save
+                newAdminCodeInput.value = savedAdminCode; 
             } else {
-                // អ្នកប្រើប្រាស់ធម្មតា: លាក់ផ្ទាំងទី១ បង្ហាញផ្ទាំងទី២
+                // ចូលផ្ទាំងអ្នកប្រើប្រាស់ធម្មតា
                 screen1.style.display = 'none';
                 screen2.style.display = 'block';
             }
         });
 
-        // ================= ផ្នែក Admin ================= //
+        // មុខងារ Admin: Save ទុកកូដ
         saveAdminCodeBtn.addEventListener('click', () => {
             const newCode = newAdminCodeInput.value.trim();
             if(newCode !== "") {
-                localStorage.setItem('secretRobuxCode', newCode); // រក្សាទុកកូដទៅក្នុង Browser
-                savedAdminCode = newCode; // Update កូដថ្មីចូលប្រព័ន្ធ
+                localStorage.setItem('secretRobuxCode', newCode); 
+                savedAdminCode = newCode; 
                 alert("បានរក្សាទុកកូដសម្ងាត់ដោយជោគជ័យ!");
             } else {
                 alert("សូមបញ្ចូលកូដសិនមុននឹង Save!");
             }
         });
 
+        // មុខងារ Admin: ត្រលប់ក្រោយ
         backToHomeBtn.addEventListener('click', () => {
             screen3.style.display = 'none';
             screen1.style.display = 'block';
-            usernameInput.value = ""; // លុបឈ្មោះចេញវិញពេលត្រលប់ក្រោយ
+            usernameInput.value = ""; 
         });
 
-        // ================= ផ្នែកអ្នកប្រើប្រាស់ធម្មតា ================= //
+        // មុខងារ User: ចុច SEND CODE
         sendBtn.addEventListener('click', () => {
+            // ដូរមុខមាត់ប៊ូតុងទៅជាកំពុងរង់ចាំ
+            sendBtn.innerText = "កំពុងទាញយក (5s)...";
+            sendBtn.classList.add("btn-disabled");
             sendBtn.disabled = true;
-            sendBtn.innerText = "កំពុងរង់ចាំ (5s)...";
-            codeResult.value = "កំពុងទាញយក...";
 
             // រង់ចាំ ៥ វិនាទី
             setTimeout(() => {
-                codeResult.value = savedAdminCode; // លោតកូដដែល Admin បាន Save មកឲ្យ
-                sendBtn.innerText = "ជោគជ័យ";
-                copyBtn.style.display = 'inline-block';
+                sendBtn.innerText = "ជោគជ័យ"; // ដូរអក្សរទៅជា ជោគជ័យ ដូចក្នុងរូបភាពទី២
+                codeContainer.style.display = 'block'; // បង្ហាញប្រអប់កូដ និងប៊ូតុង Copy
+                codeResult.value = savedAdminCode; // លោតកូដដែល Admin បាន Save
+                copyBtn.style.display = 'block';
             }, 5000);
         });
 
+        // មុខងារ User: ចុច COPY កូដ
         copyBtn.addEventListener('click', () => {
             codeResult.select();
             codeResult.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(codeResult.value).then(() => {
-                alert("បាន Copy កូដដោយជោគជ័យ: " + codeResult.value);
+                alert("បាន Copy កូដដោយជោគជ័យ!");
             }).catch(err => {
                 alert("បរាជ័យក្នុងការ Copy");
             });
