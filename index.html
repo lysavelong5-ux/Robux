@@ -48,10 +48,49 @@
         .form-group label {
             display: block;
             font-size: 14px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            font-weight: bold;
         }
 
-        input[type="text"] {
+        /* ========== កន្លែងរចនាប្រអប់ Username បែប 3D និងភ្លើង RGB ========== */
+        
+        /* តំឡើងចលនាភ្លើង RGB */
+        @keyframes rgbGlow {
+            0% { box-shadow: 0 10px 20px rgba(0,0,0,0.3), 0 0 15px #ff0000, inset 0 0 10px #ff0000; border-color: #ff0000; }
+            33% { box-shadow: 0 10px 20px rgba(0,0,0,0.3), 0 0 15px #00ff00, inset 0 0 10px #00ff00; border-color: #00ff00; }
+            66% { box-shadow: 0 10px 20px rgba(0,0,0,0.3), 0 0 15px #0000ff, inset 0 0 10px #0000ff; border-color: #0000ff; }
+            100% { box-shadow: 0 10px 20px rgba(0,0,0,0.3), 0 0 15px #ff0000, inset 0 0 10px #ff0000; border-color: #ff0000; }
+        }
+
+        #username {
+            width: 85%;
+            padding: 15px;
+            border-radius: 25px;
+            border: 2px solid transparent; /* ទុកចន្លោះឲ្យភ្លើង RGB */
+            background-color: #ffffff;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            outline: none;
+            color: #000;
+            
+            /* រចនាបែប 3D ផុសឡើងលើ */
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+            
+            /* ដំណើរការភ្លើង RGB */
+            animation: rgbGlow 3s linear infinite;
+        }
+
+        /* ពេលចុច (Focus) លើប្រអប់ វានឹងផុសលោតឡើងលើថែមទៀត */
+        #username:focus {
+            transform: translateY(-12px) scale(1.05);
+            background-color: #f8f9fa;
+        }
+        
+        /* ========================================================= */
+
+        input[type="text"]:not(#username) {
             width: 85%;
             padding: 12px;
             border-radius: 25px;
@@ -72,9 +111,10 @@
             background-color: #d8e0e5;
             font-size: 14px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 20px;
             transition: 0.2s;
             color: #000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         button:active {
@@ -98,15 +138,17 @@
             background-color: #5cb85c;
             color: white;
             font-weight: bold;
-            display: none; /* លាក់សិន ពេលកូដចេញទើបបង្ហាញ */
-            margin: 10px auto;
+            display: none;
+            margin: 15px auto;
             width: 150px;
+            box-shadow: 0 5px 15px rgba(92, 184, 92, 0.4);
         }
 
         .btn-disabled {
             background-color: #e0e0e0 !important;
             color: #b0b0b0 !important;
             cursor: not-allowed;
+            box-shadow: none;
         }
 
         .admin-title {
@@ -116,7 +158,6 @@
             font-weight: bold;
         }
 
-        /* លាក់ផ្ទាំងទី២ និង ទី៣ ពេលបើកដំបូង */
         #screen2, #screen3 {
             display: none;
         }
@@ -135,7 +176,7 @@
         <div id="screen1">
             <div class="form-group">
                 <label>សូមបញ្ចូល Username Roblox account របស់អ្នក</label>
-                <input type="text" id="username" placeholder="">
+                <input type="text" id="username" placeholder="បញ្ចូលឈ្មោះទីនេះ">
             </div>
             <button id="nextBtn">បន្ទាប់ទៀត</button>
         </div>
@@ -147,7 +188,6 @@
                 <button id="sendBtn">SEND CODE</button>
             </div>
             
-            <!-- កន្លែងបង្ហាញកូដ -->
             <div id="codeContainer" style="display: none; margin-top: 30px;">
                 <input type="text" id="codeResult" value="" readonly>
                 <button id="copyBtn" class="btn-green">COPY កូដ</button>
@@ -168,10 +208,8 @@
     </div>
 
     <script>
-        // ទាញយកកូដដែល Admin បាន Save ទុក
         let savedAdminCode = localStorage.getItem('secretRobuxCode') || "ROBUX-0000-0000-0000";
 
-        // ចាប់យក Element
         const screen1 = document.getElementById('screen1');
         const screen2 = document.getElementById('screen2');
         const screen3 = document.getElementById('screen3');
@@ -182,12 +220,10 @@
         const copyBtn = document.getElementById('copyBtn');
         const codeContainer = document.getElementById('codeContainer');
         
-        // Admin Elements
         const newAdminCodeInput = document.getElementById('newAdminCode');
         const saveAdminCodeBtn = document.getElementById('saveAdminCodeBtn');
         const backToHomeBtn = document.getElementById('backToHomeBtn');
 
-        // មុខងារពេលចុច "បន្ទាប់ទៀត"
         nextBtn.addEventListener('click', () => {
             const userVal = usernameInput.value.trim();
             
@@ -197,18 +233,15 @@
             }
 
             if (userVal === "Longzz@") {
-                // ចូលផ្ទាំង Admin
                 screen1.style.display = 'none';
                 screen3.style.display = 'block';
                 newAdminCodeInput.value = savedAdminCode; 
             } else {
-                // ចូលផ្ទាំងអ្នកប្រើប្រាស់ធម្មតា
                 screen1.style.display = 'none';
                 screen2.style.display = 'block';
             }
         });
 
-        // មុខងារ Admin: Save ទុកកូដ
         saveAdminCodeBtn.addEventListener('click', () => {
             const newCode = newAdminCodeInput.value.trim();
             if(newCode !== "") {
@@ -220,30 +253,25 @@
             }
         });
 
-        // មុខងារ Admin: ត្រលប់ក្រោយ
         backToHomeBtn.addEventListener('click', () => {
             screen3.style.display = 'none';
             screen1.style.display = 'block';
             usernameInput.value = ""; 
         });
 
-        // មុខងារ User: ចុច SEND CODE
         sendBtn.addEventListener('click', () => {
-            // ដូរមុខមាត់ប៊ូតុងទៅជាកំពុងរង់ចាំ
             sendBtn.innerText = "កំពុងទាញយក (5s)...";
             sendBtn.classList.add("btn-disabled");
             sendBtn.disabled = true;
 
-            // រង់ចាំ ៥ វិនាទី
             setTimeout(() => {
-                sendBtn.innerText = "ជោគជ័យ"; // ដូរអក្សរទៅជា ជោគជ័យ ដូចក្នុងរូបភាពទី២
-                codeContainer.style.display = 'block'; // បង្ហាញប្រអប់កូដ និងប៊ូតុង Copy
-                codeResult.value = savedAdminCode; // លោតកូដដែល Admin បាន Save
+                sendBtn.innerText = "ជោគជ័យ";
+                codeContainer.style.display = 'block';
+                codeResult.value = savedAdminCode; 
                 copyBtn.style.display = 'block';
             }, 5000);
         });
 
-        // មុខងារ User: ចុច COPY កូដ
         copyBtn.addEventListener('click', () => {
             codeResult.select();
             codeResult.setSelectionRange(0, 99999);
