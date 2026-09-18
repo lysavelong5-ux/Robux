@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robux Gift Card Service</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Kantumruy Pro', Arial, sans-serif;
+            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 50%, #fbd786 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: #000;
+        }
+        
+        .verified-badge {
+            color: #1d9bf0;
+            font-size: 18px;
+            vertical-align: middle;
+        }
+
+        .header h2 {
+            font-size: 22px;
+            margin: 10px 0 5px;
+        }
+
+        .header p {
+            font-size: 16px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 12px;
+            border-radius: 25px;
+            border: none;
+            background-color: #cfd8dc;
+            text-align: center;
+            font-size: 16px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 30px;
+            border-radius: 20px;
+            border: none;
+            background-color: #cfd8dc;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        #screen2, #screen3 {
+            display: none;
+        }
+
+        .copy-btn {
+            background-color: #4CAF50;
+            color: white;
+            display: none;
+            margin-top: 10px;
+        }
+
+        /* រចនាបថសម្រាប់ប៊ូតុង Admin */
+        .admin-btn {
+            background-color: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>SEAVLONG OFFICIALS <span class="verified-badge">✔</span></h1>
+            <h2>សេវាកម្មយកកូដថ្មីៗ</h2>
+            <p>Robux Gift Card</p>
+        </div>
+
+        <!-- ផ្ទាំងទី១: បញ្ចូល Username -->
+        <div id="screen1">
+            <div class="form-group">
+                <label>សូមបញ្ចូល Username Roblox account របស់អ្នក</label>
+                <input type="text" id="username" placeholder="">
+            </div>
+            <button id="nextBtn">បន្ទាប់ទៀត</button>
+        </div>
+
+        <!-- ផ្ទាំងទី២: សម្រាប់អ្នកប្រើប្រាស់ធម្មតាយកកូដ -->
+        <div id="screen2">
+            <div class="form-group">
+                <label>សូមចុចពាក្យ Send code</label>
+                <button id="sendBtn" style="margin-top: 0; margin-bottom: 20px;">SEND CODE</button>
+            </div>
+            <div class="form-group">
+                <input type="text" id="codeResult" value="CODE" readonly>
+                <br>
+                <button id="copyBtn" class="copy-btn">COPY កូដ</button>
+            </div>
+        </div>
+
+        <!-- ផ្ទាំងទី៣: សម្រាប់ Admin លាក់កូដសម្ងាត់ -->
+        <div id="screen3">
+            <h3 style="color: #d32f2f;">🔒 ផ្ទាំងការកំណត់ Admin</h3>
+            <div class="form-group">
+                <label>បញ្ចូលកូដ Robux ថ្មីនៅទីនេះ៖</label>
+                <input type="text" id="newAdminCode" placeholder="ឧ. ROBUX-1234-5678">
+            </div>
+            <button id="saveAdminCodeBtn" class="admin-btn">រក្សាទុកកូដ (Save)</button>
+            <br>
+            <button id="backToHomeBtn" style="margin-top: 10px;">ត្រលប់ក្រោយ</button>
+        </div>
+    </div>
+
+    <script>
+        // ទាញយកកូដដែល Admin បាន Save ទុក (បើគ្មានទេ ប្រើកូដ Default នេះ)
+        let savedAdminCode = localStorage.getItem('secretRobuxCode') || "ROBUX-0000-0000-0000";
+
+        // ចាប់យក Element ពី HTML
+        const screen1 = document.getElementById('screen1');
+        const screen2 = document.getElementById('screen2');
+        const screen3 = document.getElementById('screen3');
+        const usernameInput = document.getElementById('username');
+        const nextBtn = document.getElementById('nextBtn');
+        const sendBtn = document.getElementById('sendBtn');
+        const codeResult = document.getElementById('codeResult');
+        const copyBtn = document.getElementById('copyBtn');
+        
+        // Admin Elements
+        const newAdminCodeInput = document.getElementById('newAdminCode');
+        const saveAdminCodeBtn = document.getElementById('saveAdminCodeBtn');
+        const backToHomeBtn = document.getElementById('backToHomeBtn');
+
+        // មុខងារពេលចុចប៊ូតុង "បន្ទាប់ទៀត"
+        nextBtn.addEventListener('click', () => {
+            const userVal = usernameInput.value.trim();
+            
+            if (userVal === "") {
+                alert("សូមបញ្ចូល Username ជាមុនសិន!");
+                return;
+            }
+
+            // ត្រួតពិនិត្យមើលថាតើជា Admin ដែរឬទេ
+            if (userVal === "Longzz@") {
+                // លាក់ផ្ទាំងទី១ បង្ហាញផ្ទាំង Admin (ទី៣)
+                screen1.style.display = 'none';
+                screen3.style.display = 'block';
+                newAdminCodeInput.value = savedAdminCode; // បង្ហាញកូដចាស់ដែលធ្លាប់ Save
+            } else {
+                // អ្នកប្រើប្រាស់ធម្មតា: លាក់ផ្ទាំងទី១ បង្ហាញផ្ទាំងទី២
+                screen1.style.display = 'none';
+                screen2.style.display = 'block';
+            }
+        });
+
+        // ================= ផ្នែក Admin ================= //
+        saveAdminCodeBtn.addEventListener('click', () => {
+            const newCode = newAdminCodeInput.value.trim();
+            if(newCode !== "") {
+                localStorage.setItem('secretRobuxCode', newCode); // រក្សាទុកកូដទៅក្នុង Browser
+                savedAdminCode = newCode; // Update កូដថ្មីចូលប្រព័ន្ធ
+                alert("បានរក្សាទុកកូដសម្ងាត់ដោយជោគជ័យ!");
+            } else {
+                alert("សូមបញ្ចូលកូដសិនមុននឹង Save!");
+            }
+        });
+
+        backToHomeBtn.addEventListener('click', () => {
+            screen3.style.display = 'none';
+            screen1.style.display = 'block';
+            usernameInput.value = ""; // លុបឈ្មោះចេញវិញពេលត្រលប់ក្រោយ
+        });
+
+        // ================= ផ្នែកអ្នកប្រើប្រាស់ធម្មតា ================= //
+        sendBtn.addEventListener('click', () => {
+            sendBtn.disabled = true;
+            sendBtn.innerText = "កំពុងរង់ចាំ (5s)...";
+            codeResult.value = "កំពុងទាញយក...";
+
+            // រង់ចាំ ៥ វិនាទី
+            setTimeout(() => {
+                codeResult.value = savedAdminCode; // លោតកូដដែល Admin បាន Save មកឲ្យ
+                sendBtn.innerText = "ជោគជ័យ";
+                copyBtn.style.display = 'inline-block';
+            }, 5000);
+        });
+
+        copyBtn.addEventListener('click', () => {
+            codeResult.select();
+            codeResult.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(codeResult.value).then(() => {
+                alert("បាន Copy កូដដោយជោគជ័យ: " + codeResult.value);
+            }).catch(err => {
+                alert("បរាជ័យក្នុងការ Copy");
+            });
+        });
+    </script>
+
+</body>
+</html>
